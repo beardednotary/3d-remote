@@ -16,6 +16,21 @@ Open `web/index.html` in a browser. There's no build step and nothing to install
 
 Holding CH or VOL repeats the key. A peek closes by itself after 8 seconds.
 
+### Streaming peek (APPS)
+
+| Action | Touch | Keyboard |
+|---|---|---|
+| Browse streaming titles on the remote's display | APPS, then ◀ ▶ or swipe; CH ▲▼ switches service | A, then ← → / ↑ ↓ |
+| Open details: trailer, extras, scores, reviews, where to watch | OK or tap the display | Enter |
+| Deep link the title to the TV | **Play on TV** (or OK again) | Enter |
+
+The details panel shows the exact request a real app would send for Roku, Google TV, LG webOS or Samsung. **Open on this phone** shows the universal link that would open the service's own app. The services (Northstar, Tidewell, Kinoroll), titles and reviews are sample data.
+
+### One screen vs two
+
+- **One screen:** details slide up as a sheet over the remote. After Play on TV it closes so you can see the TV.
+- **Two panes:** on wide screens (an unfolded or dual-screen phone, a tablet in landscape, a desktop) the TV and details sit in one pane and the remote stays in the other. That way you can watch a trailer and keep using the remote. If the browser reports a hinge (`horizontal-viewport-segments: 2`), each pane fits one screen and nothing lands in the fold.
+
 ## What's real and what's simulated
 
 - **Feel**: real. Each key is a cap on a spring above a well cut into the body. It drops on `pointerdown` and springs back past its rest position on release. Clicks are synthesized with WebAudio. Haptics use `navigator.vibrate` on Android. iOS Safari 18+ doesn't support that, so the page toggles a hidden `<input type="checkbox" switch>`, which makes the Taptic Engine tick.
@@ -45,6 +60,18 @@ Discovery uses SSDP/mDNS. On iOS this needs the *Local Network* permission and B
 1. **Guide-data preview (works with any TV).** Show the channel's current show, artwork, time left and what's next. Data comes from the TV's own guide (LG `tv/getChannelProgramInfo`, Roku `/query/tv-channels`) or from a guide provider: Gracenote (commercial), Schedules Direct (cheap, personal use) or XMLTV. This is the realistic v1.
 2. **Live preview from a separate tuner.** Devices like HDHomeRun have 2–4 network tuners and stream each channel over HTTP (`/lineup.json`, then `http://<ip>:5004/auto/v<ch>`), so the app can decode a few frames of a channel the TV isn't showing. Channels DVR, Plex Live TV and Jellyfin offer the same through their APIs. This gives you exactly what the prototype shows, but only for people who own the hardware, which would make a good premium tier.
 3. **Streaming "channels" are apps.** Most viewing today happens in apps, not on broadcast channels. Here a peek means app art plus "continue watching", and it's mostly limited to what each platform exposes (Roku `/query/apps`, app icons and so on).
+
+### Streaming: trailers, reviews and deep links
+
+| Need | Source | Notes |
+|---|---|---|
+| Which service has a title, plus deep links | Watchmode, Streaming Availability (Movie of the Night), JustWatch partner API | Paid. These return web and iOS/Android links, so you don't map each service's IDs yourself |
+| Trailers, teasers, featurettes, behind the scenes | TMDB `/movie/{id}/videos`, `/tv/{id}/videos` | Mostly YouTube keys; play with the official YouTube player. Commercial apps need a TMDB commercial agreement |
+| Scores | OMDb (IMDb, Rotten Tomatoes, Metacritic); TMDB user reviews | Full critic reviews need a licensing deal |
+| Open the title on the phone | The service's universal link (e.g. `netflix.com/title/<id>`) | iOS opens the app if it's installed |
+| Open the title on the TV | Roku `POST /launch/<appId>?contentId=…&mediaType=…`; Google TV / Fire TV app link; LG `system.launcher/launch`; Samsung `ed.apps.launch` | Support varies by app; Netflix is the most locked-down |
+
+A user's own watch history and "continue watching" aren't available from any service.
 
 ### Recommended native stack (iOS)
 

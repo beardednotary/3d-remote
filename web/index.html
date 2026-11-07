@@ -159,7 +159,7 @@ button{font:inherit; color:inherit}
 .pt{font-size:13px; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .meter{height:3px; margin-top:7px; background:rgba(126,242,223,.16); border-radius:2px; overflow:hidden}
 .meter i{display:block; height:100%; width:0; background:var(--vfd); box-shadow:0 0 6px var(--vfd)}
-.hint{margin-top:auto; font-size:9.5px; letter-spacing:.16em; color:var(--vfd-dim)}
+.hint{margin-top:auto; font-size:9.5px; letter-spacing:.1em; color:var(--vfd-dim)}
 
 .peek{padding:0; text-shadow:none}
 .peek canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
@@ -195,7 +195,8 @@ button{font:inherit; color:inherit}
 .offv{align-items:center; justify-content:center; gap:6px; text-align:center}
 .offv .lbl{font-size:10px}
 
-.pills{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding-inline:4px}
+.pills{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding-inline:3px}
+.pills .key.pill{font-size:10px; letter-spacing:.1em}
 
 .mid{display:flex; justify-content:space-between; align-items:center; padding-inline:2px; margin-top:4px}
 .rocker{position:relative; width:50px; height:134px; border-radius:25px}
@@ -236,13 +237,83 @@ button{font:inherit; color:inherit}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 .haptic{position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; left:-9999px}
 
-/* wide screens: TV left, remote right, everything on one screen */
-@media (min-aspect-ratio: 5/4) and (min-width: 720px){
-  .app{height:100%; min-height:0; grid-template-columns:minmax(0,1.65fr) minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); column-gap:28px}
-  .bar{grid-column:1/-1}
-  .tvwrap{position:static; align-content:center; background:none; gap:16px}
-  .tv{width:min(100%, calc((100dvh - 150px) * 16 / 9)); padding:7px 7px 12px}
-  .stage{align-content:center}
+/* remote display: streaming browse */
+.apps{padding:0; text-shadow:none}
+.apps canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+.atop{position:relative; z-index:2; display:flex; gap:3px; padding:7px 8px 14px; background:linear-gradient(rgba(4,10,10,.9), rgba(4,10,10,0))}
+.atop span{font-size:9px; letter-spacing:.1em; padding:3px 5px 2px; border-radius:3px; color:rgba(243,255,252,.62)}
+.atop span.on{background:var(--svc, var(--vfd)); color:#0b0d10}
+.abot{margin-top:auto; position:relative; z-index:2; padding:16px 11px 8px; color:#f3fffc; background:linear-gradient(rgba(4,10,10,0), rgba(4,10,10,.92) 45%)}
+.abot .pt{margin:0; font-family:var(--f-display); font-weight:800; font-size:15px}
+.abot .row{font-size:9.5px; letter-spacing:.08em; margin-top:3px; color:rgba(243,255,252,.78)}
+.adots{display:flex; gap:4px; margin-top:6px}
+.adots i{width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,.3)}
+.adots i.on{background:#fff}
+
+/* title details: a bottom sheet on one screen, the second pane on two */
+.scrim{position:fixed; inset:0; z-index:19; background:rgba(5,7,10,.6)}
+.detail{--svc:var(--vfd); position:fixed; left:0; right:0; bottom:0; z-index:20; max-height:86dvh; overflow-y:auto; overscroll-behavior:contain;
+  background:var(--room-2); border-radius:22px 22px 0 0; box-shadow:0 -20px 60px rgba(0,0,0,.5);
+  padding-bottom:max(18px, env(safe-area-inset-bottom,0px)); animation:sheetUp .32s cubic-bezier(.2,.9,.25,1)}
+@keyframes sheetUp{from{transform:translateY(48px); opacity:0}}
+.hero{position:relative; aspect-ratio:16/9; max-width:100%; background:#000; overflow:hidden; border-radius:inherit; border-bottom-left-radius:0; border-bottom-right-radius:0}
+.hero canvas{display:block; width:100%; height:100%}
+.hero-ov{position:absolute; left:0; right:0; bottom:0; display:grid; gap:5px; padding:44px 18px 14px; background:linear-gradient(rgba(8,10,14,0), rgba(8,10,14,.92))}
+.svc-chip{justify-self:start; padding:3px 7px 2px; border-radius:4px; background:var(--svc); color:#0d0f12; font:11px var(--f-mono); letter-spacing:.14em; text-transform:uppercase}
+.hero h2{margin:0; font:800 clamp(24px, 4.6vw, 38px)/1 var(--f-display); letter-spacing:-.02em; text-wrap:balance}
+.meta{font:12px var(--f-mono); color:#b8c0cd; letter-spacing:.04em}
+.close{position:absolute; top:10px; right:10px; z-index:3; width:36px; height:36px; border-radius:50%; border:0; background:rgba(8,10,14,.72); color:var(--ink); font-size:15px; cursor:pointer}
+.pbar{position:absolute; left:12px; right:12px; bottom:10px; display:flex; align-items:center; gap:10px; font:11px var(--f-mono); color:#e9eef5}
+.pbar button{width:30px; height:30px; border-radius:50%; border:0; background:rgba(8,10,14,.72); color:#fff; cursor:pointer; flex:none}
+.pbar .lab{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:40%}
+.pbar .track{flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,.25); overflow:hidden}
+.pbar .track i{display:block; height:100%; width:0; background:var(--svc)}
+.pbar .clock{font-variant-numeric:tabular-nums}
+.hero:not(.playing) .pbar{display:none}
+.hero.playing .hero-ov{display:none}
+.dbody{display:grid; gap:20px; padding-block:16px 6px; padding-left:max(18px, env(safe-area-inset-left,0px)); padding-right:max(18px, env(safe-area-inset-right,0px))}
+.actions{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font:600 14px/1 var(--f-display); padding:11px 15px; border-radius:999px; border:1px solid var(--line); background:transparent; color:var(--ink); cursor:pointer}
+.btn.primary{background:var(--svc); border-color:var(--svc); color:#0d0f12}
+.btn:focus-visible,.close:focus-visible,.pbar button:focus-visible,.extras button:focus-visible{outline:2px solid var(--vfd); outline-offset:2px}
+.scores{display:flex; flex-wrap:wrap; gap:22px}
+.score b{display:block; font:800 24px/1 var(--f-display); font-variant-numeric:tabular-nums}
+.score span{font:10px var(--f-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.syn{margin:0; max-width:62ch; font-size:15px; line-height:1.5; font-weight:500}
+.dsec{min-width:0}
+.dsec h3{margin:0 0 9px; font:11px var(--f-mono); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:400}
+.where{display:flex; flex-wrap:wrap; gap:8px}
+.where span{padding:7px 11px; border-radius:8px; background:rgba(255,255,255,.06); font-size:14px; font-weight:600}
+.where em{font:11px var(--f-mono); font-style:normal; color:var(--muted); margin-left:8px}
+.extras{list-style:none; margin:0; padding:0}
+.extras button{width:100%; display:grid; grid-template-columns:12ch 1fr auto; gap:10px; align-items:center; padding:11px 2px; border:0; border-bottom:1px solid var(--line); background:transparent; text-align:left; cursor:pointer; font:600 14px var(--f-display)}
+.extras .ty{font:10px var(--f-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.extras .du{font:12px var(--f-mono); color:var(--muted); font-variant-numeric:tabular-nums}
+.rev{display:grid; gap:12px}
+.rev blockquote{margin:0; padding-left:12px; border-left:2px solid var(--svc); font-size:15px; line-height:1.4; font-weight:500}
+.rev cite{display:block; margin-top:4px; font:11px var(--f-mono); font-style:normal; color:var(--muted); letter-spacing:.04em}
+.plat{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px}
+.log{margin:0; padding:11px 13px; border-radius:10px; background:#0b0f14; color:#b9c3d3; font:12px/1.6 var(--f-mono); white-space:pre; overflow-x:auto}
+.note{margin:0; font:11px/1.55 var(--f-mono); color:var(--muted); max-width:70ch}
+
+/* two panes (wide screens, unfolded or dual-screen phones): TV + details left, remote right */
+.two .app{height:100%; min-height:0; grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr) auto; grid-template-areas:"bar bar" "tv stage" "detail stage"; column-gap:28px}
+.two .app.has-detail{grid-template-rows:auto auto minmax(0,1fr)}
+.two .bar{grid-area:bar}
+.two .tvwrap{grid-area:tv; position:static; align-content:center; background:none; gap:16px}
+.two .tv{width:min(100%, calc((100dvh - 150px) * 16 / 9)); padding:7px 7px 12px}
+.two .has-detail .tv{width:min(100%, calc(30dvh * 16 / 9))}
+.two .has-detail .kbd{display:none}
+.two .stage{grid-area:stage; align-content:center}
+.two .detail{grid-area:detail; position:static; max-height:none; min-height:0; border-radius:16px; animation:none; box-shadow:0 0 0 1px var(--line)}
+.two .scrim{display:none}
+/* a real hinge: give each screen its own pane and keep content out of the fold */
+@media (horizontal-viewport-segments: 2){
+  .two .app{grid-template-columns:env(viewport-segment-width 0 0, 1fr) env(viewport-segment-width 1 0, 1fr);
+    column-gap:calc(env(viewport-segment-left 1 0, 0px) - env(viewport-segment-right 0 0, 0px)); padding-left:0; padding-right:0}
+  .two .app > :not(.detail){padding-left:16px; padding-right:16px}
+  .two .detail{margin-inline:16px}
 }
 @media (hover:hover) and (pointer:fine) and (min-width:720px){ .kbd{display:block} }
 @media (prefers-reduced-motion: reduce){
@@ -254,7 +325,7 @@ button{font:inherit; color:inherit}
 </head>
 <body>
 <div class="glow" id="glow" aria-hidden="true"></div>
-<main class="app">
+<main class="app" id="app">
   <header class="bar">
     <h1 class="mark">Peek <small>remote prototype</small></h1>
     <div class="tools" role="group" aria-label="Remote settings">
@@ -284,8 +355,32 @@ button{font:inherit; color:inherit}
       </div>
       <i class="tvled" aria-hidden="true"></i>
     </div>
-    <p class="kbd">Keyboard: <b>↑ ↓</b> peek · <b>Enter</b> tune · <b>G</b> guide · <b>0–9</b> channel · <b>+ −</b> volume · <b>Esc</b> back</p>
+    <p class="kbd">Keyboard: <b>↑ ↓</b> peek · <b>Enter</b> tune · <b>G</b> guide · <b>A</b> apps · <b>0–9</b> channel · <b>+ −</b> volume · <b>Esc</b> back</p>
   </section>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="detail" id="detail" hidden aria-label="Title details">
+    <div class="hero" id="hero">
+      <canvas id="dCv"></canvas>
+      <button class="close" id="dClose" aria-label="Close details">✕</button>
+      <div class="hero-ov"><span class="svc-chip" id="dSvc"></span><h2 id="dTitle"></h2><div class="meta" id="dMeta"></div></div>
+      <div class="pbar"><button id="pPause" aria-label="Pause">❚❚</button><span class="lab" id="pLabel"></span><div class="track"><i id="pFill"></i></div><span class="clock" id="pClock"></span></div>
+    </div>
+    <div class="dbody">
+      <div class="actions">
+        <button class="btn primary" id="aPlayTv">▶ Play on TV</button>
+        <button class="btn" id="aTrailer">Watch trailer</button>
+        <button class="btn" id="aPhone">Open on this phone</button>
+      </div>
+      <div class="scores" id="dScores"></div>
+      <p class="syn" id="dSyn"></p>
+      <section class="dsec"><h3>Where to watch</h3><div class="where" id="dWhere"></div></section>
+      <section class="dsec"><h3>Trailers &amp; extras</h3><ul class="extras" id="dExtras"></ul></section>
+      <section class="dsec"><h3>Reviews</h3><div class="rev" id="dRev"></div></section>
+      <section class="dsec"><h3>Deep link to your TV</h3><div class="plat" id="dPlat" role="group" aria-label="TV platform"></div><pre class="log" id="dLog"></pre></section>
+      <p class="note">Sample services, titles and reviews. A real build would get catalog data and deep links from Watchmode or Streaming Availability, trailers and extras from TMDB, and scores from OMDb.</p>
+    </div>
+  </aside>
 
   <section class="stage" id="stage" aria-label="Remote">
     <div class="fit" id="fit">
@@ -304,7 +399,7 @@ button{font:inherit; color:inherit}
               <div class="big"><span class="n" id="iNum">07</span><span class="nm" id="iName"></span></div>
               <div class="pt" id="iProg"></div>
               <div class="meter"><i id="iBar"></i></div>
-              <div class="hint">CH ▲▼ OR SWIPE HERE TO PEEK</div>
+              <div class="hint">SWIPE OR CH ▲▼ TO PEEK · APPS</div>
             </div>
             <div class="view peek" id="vPeek" hidden>
               <canvas id="pCv"></canvas>
@@ -321,6 +416,15 @@ button{font:inherit; color:inherit}
               <span class="n" id="eNum">_ _</span>
             </div>
             <div class="view guide" id="vGuide" hidden><ul class="glist" id="glist" aria-label="Channel guide"></ul></div>
+            <div class="view apps" id="vApps" hidden>
+              <canvas id="aCv"></canvas>
+              <div class="atop" id="aTabs"></div>
+              <div class="abot">
+                <div class="pt" id="aTitle"></div>
+                <div class="row"><span id="aMeta"></span><span class="go">OK ▸ DETAILS</span></div>
+                <div class="adots" id="aDots"></div>
+              </div>
+            </div>
             <div class="view offv" id="vOff" hidden>
               <span>TV IS OFF</span>
               <span class="lbl">PRESS ⏻ TO WAKE IT</span>
@@ -330,6 +434,7 @@ button{font:inherit; color:inherit}
           <div class="pills">
             <button class="key pill fn" data-k="back"><span class="cap">Back</span></button>
             <button class="key pill fn" data-k="guide"><span class="cap">Guide</span></button>
+            <button class="key pill fn" data-k="apps"><span class="cap">Apps</span></button>
             <button class="key pill fn" data-k="info"><span class="cap">Info</span></button>
           </div>
 
@@ -469,7 +574,6 @@ function kitchen(c, w, h, t) {
     const p = ((t * .22 + i / 16) % 1), x = cx + Math.sin(i * 2.3) * r * .6 + Math.sin(p * 6 + i) * w * .02, y = cy - p * h * .62;
     c.fillStyle = `rgba(255,255,255,${.16 * (1 - p)})`; dot(c, x, y, h * (.03 + p * .08));
   }
-  c.fillStyle = '#f3e7d3'; c.font = `italic 700 ${h * .068}px ${F}`; c.textBaseline = 'alphabetic'; c.fillText('One-pan suppers', w * .05, h * .14);
 }
 const STARS = Array.from({ length: 140 }, (_, i) => [((i * 97.13) % 100) / 100, ((i * 61.7) % 100) / 100, (i % 3) + 1]);
 function space(c, w, h, t) {
@@ -584,9 +688,74 @@ function bug(c, w, h, ch) {
 }
 const chT = (ch, t) => t + ch.n * 13;
 
+/* ================= streaming catalog (sample services and titles) ================= */
+const hash = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+const T = (name, kind, genre, year, len, rating, scene, tint, critic, aud, syn, quote, fan, also) =>
+  ({ name, kind, genre, year, len, rating, scene, tint, critic, aud, syn, quote, fan, also });
+const SVC = [
+  { name: 'Northstar', color: '#e8b04a', host: 'watch.northstar.example', pre: 'ns', roku: 40513, lg: 'com.northstar.tv', sam: '3201907018807', titles: [
+    T('The Long Orbit', 'Series', 'Sci-fi drama', '2026', '2 seasons', 'TV-14', space, '#6f8cff', 91, 87, 'A repair crew on a failing relay station has to decide who gets the last seat home.', ['Patient, eerie and beautifully lit.', 'Signal & Noise'], ['Binged both seasons in one weekend.', 'Audience review']),
+    T('Saltwater Hours', 'Film', 'Drama', '2025', '1h 52m', 'PG-13', nature, '#ff8f66', 84, 90, "Two estranged sisters run their late father's ferry for one last summer.", ['Quiet, salty and earned.', 'The Reel Ledger'], ['Made me call my sister.', 'Audience review'], ['Kinoroll', 'Rent $3.99']),
+    T('Final Whistle', 'Series', 'Sports docuseries', '2026', '1 season', 'TV-MA', sports, '#57d36b', 78, 88, 'A full season inside a second-division club fighting relegation.', ['The dressing-room footage alone is worth it.', 'Matchday Review'], ["I don't even like football and I cried.", 'Audience review']),
+    T('Bounce Squad: Big City', 'Film', 'Animation', '2025', '1h 31m', 'G', toons, '#ffd84d', 72, 94, 'The blobs leave Jelly Hill for the city and get lost before the opening credits end.', ['Pure sugar, expertly timed.', 'Frame Rate Weekly'], ['My kids have watched it eleven times.', 'Audience review']),
+  ] },
+  { name: 'Tidewell', color: '#4fd1c5', host: 'play.tidewell.example', pre: 'tw', roku: 61207, lg: 'com.tidewell.app', sam: '3202104022361', titles: [
+    T('Low Heat', 'Series', 'Cooking competition', '2025', '3 seasons', 'TV-PG', kitchen, '#ff7a45', 88, 85, 'Twelve home cooks, one burner each, no ovens allowed.', ['The most stressful cooking show since timers were invented.', 'Plate & Screen'], ['The season 2 finale was unreal.', 'Audience review']),
+    T('The Lamplighter', 'Film', 'Period mystery', '1951, restored', '1h 44m', 'NR', movies, '#e3c08d', 96, 89, 'A night watchman meets the same stranger under a different streetlamp every night.', ['The restoration makes every shadow count.', 'Old Reels Quarterly'], ['Better than most new thrillers.', 'Audience review']),
+    T('Pressure Front', 'Film', 'Thriller', '2026', '2h 03m', 'R', weather, '#7a6bff', 69, 74, "A storm chaser's footage shows something that isn't weather.", ['A great first hour, then the ending blows away.', 'Signal & Noise'], ['Turn the lights off for this one.', 'Audience review'], ['Northstar', 'Rent $5.99']),
+    T('Desk Lights', 'Series', 'Music docuseries', '2026', '1 season', 'TV-14', music, '#c56bff', 83, 91, 'Six bedroom producers share one deadline and one very small studio.', ['Warm, funny and full of good tracks.', 'Frame Rate Weekly'], ['Added half the soundtrack to my playlists.', 'Audience review']),
+  ] },
+  { name: 'Kinoroll', color: '#ff6b8b', host: 'kinoroll.example', pre: 'kr', roku: 77810, lg: 'com.kinoroll.webos', sam: '3201812016545', titles: [
+    T('Anchor', 'Series', 'Newsroom drama', '2024', '4 seasons', 'TV-MA', news, '#ff5c7a', 87, 82, 'The night shift at a city station after the main anchor walks off air.', ['Sharp writing, sharper ensemble.', 'The Reel Ledger'], ['Season 3 is the best one.', 'Audience review']),
+    T('Tidepool', 'Film', 'Nature documentary', '2026', '1h 18m', 'G', nature, '#3fd6c9', 94, 92, 'One rock pool, one year, filmed in macro.', ['A whole world in a puddle.', 'Wild Screen'], ['Watched it with my grandparents and we all loved it.', 'Audience review']),
+    T('Glasshouse', 'Series', 'Comedy', '2025', '2 seasons', 'TV-14', kitchen, '#7ddf8a', 81, 86, 'A failing plant shop starts serving soup and accidentally gets famous.', ['Cozy without being toothless.', 'Plate & Screen'], ['Comfort TV, done right.', 'Audience review']),
+    T('Outer Moons', 'Film', 'Space documentary', '2025', '1h 36m', 'PG', space, '#ffcf70', 89, 90, 'What recent probes found under the ice of four moons.', ['Clear, careful and quietly thrilling.', 'Wild Screen'], ['Paused it constantly to read more.', 'Audience review']),
+  ] },
+];
+function extrasFor(t) {
+  const h = hash(t.name);
+  return [['Trailer', 'Official trailer', 118 + h % 50], ['Teaser', 'Teaser', 45 + h % 30],
+    ['Behind the scenes', t.kind === 'Series' ? 'Making season 1' : 'Making of', 380 + h % 300], ['Interview', 'Cast & crew interview', 240 + h % 200]];
+}
+SVC.forEach(s => s.titles.forEach(t => { t.id = `${s.pre}-${100000 + hash(t.name) % 900000}`; t.extras = extrasFor(t); t.seed = hash(t.name) % 60; }));
+const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+function drawTitle(c, w, h, ti, t) {
+  ti.scene(c, w, h, t + ti.seed);
+  c.save(); c.globalCompositeOperation = 'color'; c.globalAlpha = .45; c.fillStyle = ti.tint; c.fillRect(0, 0, w, h); c.restore();
+}
+function wrapText(c, text, x, y, maxW, lh) {
+  const words = text.split(' '); let line = '', lines = [];
+  words.forEach(wd => { const test = line ? line + ' ' + wd : wd; if (c.measureText(test).width > maxW && line) { lines.push(line); line = wd; } else line = test; });
+  lines.push(line); const y0 = y - (lines.length - 1) * lh / 2; lines.forEach((l, i) => c.fillText(l, x, y0 + i * lh));
+}
+function quoteCard(c, w, h, ti) {
+  c.fillStyle = '#07080a'; c.fillRect(0, 0, w, h); c.fillStyle = '#f4efe6'; c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.font = `700 ${h * .075}px ${F}`; wrapText(c, `“${ti.quote[0]}”`, w / 2, h * .45, w * .72, h * .095);
+  c.font = `500 ${h * .04}px ${F}`; c.fillStyle = 'rgba(244,239,230,.6)'; c.fillText(ti.quote[1].toUpperCase(), w / 2, h * .7);
+  c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+}
+function splash(c, w, h, svc, p) {
+  c.fillStyle = '#0b0d11'; c.fillRect(0, 0, w, h);
+  c.globalAlpha = Math.min(1, p * 2.5); c.fillStyle = svc.color; c.font = `800 ${h * .12}px ${F}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.fillText(svc.name.toUpperCase(), w / 2, h * .46); c.globalAlpha = 1;
+  for (let i = 0; i < 3; i++) { c.fillStyle = `rgba(255,255,255,${(Math.floor(p * 9) % 3) === i ? .85 : .25})`; dot(c, w / 2 + (i - 1) * h * .04, h * .62, h * .009); }
+  c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+}
+const PLAT = [['roku', 'Roku'], ['gtv', 'Google TV'], ['lg', 'LG webOS'], ['sam', 'Samsung']];
+function linkFor(s, t, plat) {
+  const id = t.id, mt = t.kind === 'Film' ? 'movie' : 'series', url = `https://${s.host}/title/${id}`;
+  return {
+    roku: [`POST http://192.168.1.42:8060/launch/${s.roku}?contentId=${id}&mediaType=${mt}`, '← 200 OK'],
+    gtv: ['Android TV Remote v2 → 192.168.1.57:6466', `launch app link ${url}`, '← ok'],
+    lg: ['ssap://system.launcher/launch → 192.168.1.63:3001', `{"id":"${s.lg}","contentId":"${id}"}`, '← {"returnValue":true}'],
+    sam: ['wss://192.168.1.71:8002 samsung.remote.control', `ed.apps.launch {"appId":"${s.sam}","action_type":"DEEP_LINK","metaTag":"${id}"}`, '← ok'],
+  }[plat];
+}
+
 /* ================= state ================= */
 const S = { on: true, cur: 3, prev: 0, peek: null, peekNum: null, mode: 'idle', entry: '', vol: 24, muted: false, sel: 0,
-  peekUntil: 0, peekLen: 8000, staticUntil: 0, scale: 1, sound: true, haptics: true };
+  peekUntil: 0, peekLen: 8000, staticUntil: 0, scale: 1, sound: true, haptics: true,
+  apps: { s: 0, i: 0 }, detail: null, tvApp: null, play: null, plat: 'roku' };
 try { const f = localStorage.getItem('peek.finish'); if (f) setFinish(f, false); } catch (e) {}
 
 /* ================= feedback: sound, haptics, IR flash ================= */
@@ -632,9 +801,10 @@ function buzz(ms) {
 let irT; function fireIR() { const ir = $('ir'); ir.classList.add('fire'); clearTimeout(irT); irT = setTimeout(() => ir.classList.remove('fire'), 90); }
 
 /* ================= remote logic ================= */
-const views = { idle: $('vIdle'), peek: $('vPeek'), entry: $('vEntry'), guide: $('vGuide'), off: $('vOff') };
+const views = { idle: $('vIdle'), peek: $('vPeek'), entry: $('vEntry'), guide: $('vGuide'), apps: $('vApps'), off: $('vOff') };
 function setMode(m) {
   S.mode = m; if (m !== 'peek') { S.peek = null; S.peekNum = null; }
+  if (m !== 'apps' && S.detail) closeDetail();
   for (const k in views) views[k].hidden = k !== m;
   if (m === 'idle') renderIdle();
 }
@@ -643,6 +813,15 @@ function act(k) {
   if (k === 'power') return power();
   if (!S.on) { setMode('off'); return; }
   if (/^\d$/.test(k)) return digit(k);
+  if (k === 'apps') return S.mode === 'apps' ? setMode('idle') : openApps();
+  if (k === 'back' && S.detail) return closeDetail();
+  if (S.mode === 'apps') switch (k) {
+    case 'left': return appStep(-1);
+    case 'right': return appStep(1);
+    case 'up': case 'chup': return svcStep(-1);
+    case 'down': case 'chdn': return svcStep(1);
+    case 'ok': case 'enter': return S.detail ? playOnTV() : openDetail();
+  }
   const g = S.mode === 'guide';
   switch (k) {
     case 'chup': case 'up':    return g ? guideMove(-1) : peekStep(1);
@@ -698,10 +877,87 @@ function resolveEntry(tuneNow) {
   setMode('peek'); S.peek = i; S.peekNum = num; S.peekLen = i >= 0 ? 8000 : 3500; S.peekUntil = performance.now() + S.peekLen; fillPeek();
   say(i >= 0 ? `Peeking channel ${num}. Press OK to tune.` : `Channel ${num} has no signal.`);
 }
+/* ---- streaming: browse on the remote, details in the sheet or second pane ---- */
+const two = () => twoMQ.matches;
+const curTitle = () => { const s = SVC[S.apps.s]; return [s, s.titles[S.apps.i]]; };
+function openApps() { setMode('apps'); fillApps(); }
+function appStep(d) { const n = SVC[S.apps.s].titles.length; S.apps.i = (S.apps.i + d + n) % n; fillApps(); if (S.detail) openDetail(); }
+function svcStep(d) { S.apps.s = (S.apps.s + d + SVC.length) % SVC.length; S.apps.i = 0; fillApps(); if (S.detail) openDetail(); }
+function fillApps() {
+  const [s, t] = curTitle();
+  $('vApps').style.setProperty('--svc', s.color);
+  $('aTabs').innerHTML = SVC.map((x, i) => `<span class="${i === S.apps.s ? 'on' : ''}">${x.name.toUpperCase()}</span>`).join('');
+  $('aTitle').textContent = t.name; $('aMeta').textContent = `${t.kind.toUpperCase()} · ${t.year} · ${t.critic}%`;
+  $('aDots').innerHTML = s.titles.map((_, i) => `<i class="${i === S.apps.i ? 'on' : ''}"></i>`).join('');
+  say(`${s.name}: ${t.name}. Press OK for details.`);
+}
+function showLog(head, lines) { $('dLog').textContent = [head, ...lines].join('\n'); }
+function previewLink() { const { s, t } = S.detail; showLog('Play on TV will send:', linkFor(s, t, S.plat).slice(0, -1)); }
+function renderPlat() {
+  const box = $('dPlat'); box.innerHTML = '';
+  PLAT.forEach(([id, label]) => {
+    const b = document.createElement('button'); b.className = 'tog'; b.id = 'plat-' + id; b.textContent = label; b.setAttribute('aria-pressed', String(S.plat === id));
+    b.addEventListener('click', () => { S.plat = id; renderPlat(); previewLink(); }); box.appendChild(b);
+  });
+}
+function sheetState() {
+  const sheet = !!S.detail && !two();
+  $('scrim').hidden = !sheet; document.body.style.overflow = sheet ? 'hidden' : '';
+}
+function openDetail() {
+  const [s, t] = curTitle(); S.detail = { s, t }; S.play = null;
+  const d = $('detail'); d.style.setProperty('--svc', s.color);
+  $('dSvc').textContent = s.name; $('dTitle').textContent = t.name;
+  $('dMeta').textContent = `${t.kind} · ${t.genre} · ${t.year} · ${t.len} · ${t.rating}`;
+  $('dScores').innerHTML = `<div class="score"><b>${t.critic}%</b><span>Critics</span></div><div class="score"><b>${t.aud}%</b><span>Audience</span></div><div class="score"><b>${t.rating}</b><span>Rated</span></div>`;
+  $('dSyn').textContent = t.syn;
+  $('dWhere').innerHTML = `<span>${s.name}<em>Included</em></span>` + (t.also ? `<span>${t.also[0]}<em>${t.also[1]}</em></span>` : '');
+  const ex = $('dExtras'); ex.innerHTML = '';
+  t.extras.forEach(([ty, nm, sec]) => {
+    const li = document.createElement('li'), b = document.createElement('button');
+    b.innerHTML = `<span class="ty">${ty}</span><span>${nm}</span><span class="du">${mmss(sec)}</span>`;
+    b.addEventListener('click', () => playClip(`${ty}: ${nm}`, sec)); li.appendChild(b); ex.appendChild(li);
+  });
+  $('dRev').innerHTML = `<blockquote>“${t.quote[0]}”<cite>${t.quote[1]}, critic</cite></blockquote><blockquote>“${t.fan[0]}”<cite>${t.fan[1]}</cite></blockquote>`;
+  renderPlat(); previewLink(); $('hero').classList.remove('playing');
+  d.hidden = false; d.scrollTop = 0; $('app').classList.add('has-detail'); sheetState(); fit();
+  say(`${t.name} details open.`);
+}
+function closeDetail() {
+  S.detail = null; S.play = null; $('detail').hidden = true; $('app').classList.remove('has-detail'); sheetState(); fit();
+}
+function playClip(label, sec) {
+  S.play = { dur: sec, start: performance.now(), paused: null };
+  $('pLabel').textContent = label; $('pPause').textContent = '❚❚'; $('pPause').setAttribute('aria-label', 'Pause');
+  $('hero').classList.add('playing'); $('detail').scrollTop = 0;
+}
+function playOnTV() {
+  if (!S.detail || !S.on) return;
+  const { s, t } = S.detail; S.tvApp = { s, t, at: performance.now() }; glow(); renderIdle();
+  showLog(`Sent at ${fmt(Date.now())}:`, [...linkFor(s, t, S.plat), `✓ TV opened ${s.name} → ${t.name}`]);
+  buzz(12); setTimeout(() => showBanner(4000), 1500);
+  say(`Opening ${t.name} on ${s.name} on the TV.`);
+  if (!two()) setTimeout(closeDetail, 650);   // one screen: get the sheet out of the way so you see the TV
+}
+function drawApp(c, w, h, now, t) {
+  const a = S.tvApp, el = now - a.at;
+  if (el < 1400) return splash(c, w, h, a.s, el / 1400);
+  drawTitle(c, w, h, a.t, t);
+  if (el < 6500) {
+    const g = c.createLinearGradient(0, 0, 0, h * .3); g.addColorStop(0, 'rgba(0,0,0,.75)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = g; c.fillRect(0, 0, w, h * .3); c.textBaseline = 'top';
+    c.fillStyle = '#fff'; c.font = `800 ${h * .06}px ${F}`; c.fillText(a.t.name, w * .04, h * .05);
+    c.fillStyle = 'rgba(255,255,255,.75)'; c.font = `500 ${h * .035}px ${F}`; c.fillText(`${a.s.name} · opened by deep link`, w * .04, h * .13);
+    c.textBaseline = 'alphabetic';
+  }
+}
+
 function tune(i) {
   if (i == null || i < 0) return;
-  if (i !== S.cur) {
-    S.prev = S.cur; S.cur = i; S.staticUntil = performance.now() + (reduced ? 60 : 260);
+  const wasApp = !!S.tvApp; S.tvApp = null;
+  if (i !== S.cur || wasApp) {
+    if (i !== S.cur) { S.prev = S.cur; S.cur = i; }
+    S.staticUntil = performance.now() + (reduced ? 60 : 260);
     hiss(); setTimeout(() => buzz(6), 260);
   }
   setMode('idle'); showBanner(); glow();
@@ -734,6 +990,13 @@ function osdVol() {
 let banT;
 function showBanner(ms = 3500) {
   if (!S.on) return;
+  if (S.tvApp) {
+    const { s, t } = S.tvApp;
+    $('bNum').textContent = '▶'; $('bName').textContent = s.name; $('bTime').textContent = t.len; $('bProg').textContent = t.name;
+    $('bNext').textContent = 'Opened from Peek by deep link'; $('bBar').style.width = '2%';
+    $('banner').classList.add('show'); clearTimeout(banT); banT = setTimeout(() => $('banner').classList.remove('show'), ms);
+    return;
+  }
   const ch = CH[S.cur], p = prog(ch);
   $('bNum').textContent = ch.n; $('bName').textContent = ch.name; $('bTime').textContent = `${fmt(p.start)}–${fmt(p.end)}`;
   $('bProg').textContent = p.title; $('bNext').textContent = `Next: ${p.next}`; $('bBar').style.width = (p.p * 100).toFixed(1) + '%';
@@ -746,8 +1009,12 @@ function power() {
   else { crt.classList.add('off'); $('banner').classList.remove('show'); setMode('off'); }
   $('tv').classList.toggle('is-off', !S.on); glow(); say(S.on ? 'TV on' : 'TV off');
 }
-function glow() { $('glow').style.backgroundColor = S.on ? CH[S.cur].color : '#1d2430'; }
+function glow() { $('glow').style.backgroundColor = !S.on ? '#1d2430' : S.tvApp ? S.tvApp.s.color : CH[S.cur].color; }
 function renderIdle() {
+  if (S.tvApp) {
+    $('iNum').textContent = '▶'; $('iName').textContent = S.tvApp.s.name; $('iProg').textContent = S.tvApp.t.name;
+    $('iBar').style.width = '2%'; $('iClock').textContent = fmt(Date.now()).toUpperCase(); return;
+  }
   const ch = CH[S.cur], p = prog(ch);
   $('iNum').textContent = pad2(ch.n); $('iName').textContent = ch.name; $('iProg').textContent = p.title;
   $('iBar').style.width = (p.p * 100).toFixed(1) + '%'; $('iClock').textContent = fmt(Date.now()).toUpperCase();
@@ -774,7 +1041,7 @@ document.querySelectorAll('[data-k]').forEach(el => {
   el.addEventListener('contextmenu', e => e.preventDefault());
 });
 const KEYMAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', Enter: 'ok', Escape: 'back', Backspace: 'back',
-  PageUp: 'chup', PageDown: 'chdn', '+': 'volup', '=': 'volup', '-': 'voldn', m: 'mute', g: 'guide', i: 'info', l: 'last', p: 'power' };
+  PageUp: 'chup', PageDown: 'chdn', '+': 'volup', '=': 'volup', '-': 'voldn', m: 'mute', g: 'guide', a: 'apps', i: 'info', l: 'last', p: 'power' };
 addEventListener('keydown', e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.target.closest && e.target.closest('button') && (e.key === 'Enter' || e.key === ' ')) return;
@@ -791,11 +1058,30 @@ vfd.addEventListener('pointerdown', e => {
 });
 vfd.addEventListener('pointermove', e => {
   if (!sw) return; const dx = e.clientX - sw.x;
-  if (Math.abs(dx) > 34 * S.scale) { sw.x = e.clientX; sw.moved = true; peekStep(dx < 0 ? 1 : -1); sfx('tick', true); buzz(5); fireIR(); }
+  if (Math.abs(dx) > 34 * S.scale) {
+    sw.x = e.clientX; sw.moved = true;
+    if (S.mode === 'apps') appStep(dx < 0 ? 1 : -1); else peekStep(dx < 0 ? 1 : -1);
+    sfx('tick', true); buzz(5); fireIR();
+  }
 });
 vfd.addEventListener('pointerup', () => {
   if (!sw) return; const tap = !sw.moved && performance.now() - sw.t < 300; sw = null;
-  if (tap && S.mode === 'peek' && S.peek >= 0) { sfx('big', true); buzz(10); fireIR(); ok(); }
+  if (tap && S.mode === 'apps') { sfx('big', true); buzz(10); openDetail(); }
+  else if (tap && S.mode === 'peek' && S.peek >= 0) { sfx('big', true); buzz(10); fireIR(); ok(); }
+});
+
+$('dClose').addEventListener('click', closeDetail);
+$('scrim').addEventListener('click', closeDetail);
+$('aPlayTv').addEventListener('click', playOnTV);
+$('aTrailer').addEventListener('click', () => { const ex = S.detail.t.extras[0]; playClip(`${ex[0]}: ${ex[1]}`, ex[2]); });
+$('aPhone').addEventListener('click', () => {
+  const { s, t } = S.detail;
+  showLog('Open on this phone (iOS universal link):', [`https://${s.host}/title/${t.id}`, `Opens in the ${s.name} app if it's installed, otherwise on the web.`]);
+});
+$('pPause').addEventListener('click', e => {
+  const p = S.play; if (!p) return; const now = performance.now();
+  if (p.paused) { p.start += now - p.paused; p.paused = null; e.currentTarget.textContent = '❚❚'; e.currentTarget.setAttribute('aria-label', 'Pause'); }
+  else { p.paused = now; e.currentTarget.textContent = '▶'; e.currentTarget.setAttribute('aria-label', 'Play'); }
 });
 vfd.addEventListener('pointercancel', () => { sw = null; });
 
@@ -811,11 +1097,13 @@ $('tog-haptic').addEventListener('click', e => { S.haptics = !S.haptics; e.curre
 
 /* ================= layout: scale the remote to the room, tilt it toward the pointer ================= */
 const stage = $('stage'), fitEl = $('fit'), scaler = $('scaler'), remote = $('remote');
-const wide = matchMedia('(min-aspect-ratio: 5/4) and (min-width: 720px)');
+const twoMQ = matchMedia('(min-width: 640px) and (min-aspect-ratio: 4/5), (horizontal-viewport-segments: 2)');
 const finePtr = matchMedia('(hover: hover) and (pointer: fine)');
+function applyTwo() { document.documentElement.classList.toggle('two', twoMQ.matches); sheetState(); }
+twoMQ.addEventListener('change', () => { applyTwo(); fit(); }); applyTwo();
 function fit() {
   const W = 300, H = scaler.offsetHeight + 10, r = stage.getBoundingClientRect();
-  const availW = r.width, availH = wide.matches ? r.height : innerHeight - (r.top + scrollY) - 12;
+  const availW = r.width, availH = two() ? r.height : innerHeight - (r.top + scrollY) - 12;
   let s = Math.min(availW / (W + 24), availH / H, 1.3);
   s = Math.max(s, Math.min(.86, availW / (W + 24)));
   S.scale = s; scaler.style.transform = `scale(${s})`; fitEl.style.width = W * s + 'px'; fitEl.style.height = H * s + 'px';
@@ -835,6 +1123,7 @@ function sizeCv(cv, scale, maxDpr) {
   return [w, h];
 }
 const tvCv = $('tvCv'), tvC = tvCv.getContext('2d'), pCv = $('pCv'), pC = pCv.getContext('2d');
+const aCv = $('aCv'), aC = aCv.getContext('2d'), dCv = $('dCv'), dC = dCv.getContext('2d');
 const gCvs = [...$('glist').querySelectorAll('canvas')].map(cv => cv.getContext('2d'));
 let lastThumb = 0, lastSec = 0;
 function frame(now) {
@@ -842,7 +1131,21 @@ function frame(now) {
   if (S.on) {
     const [w, h] = sizeCv(tvCv, 1, 1.5);
     if (now < S.staticUntil) staticNoise(tvC, w, h);
+    else if (S.tvApp) drawApp(tvC, w, h, now, t);
     else { const ch = CH[S.cur]; ch.draw(tvC, w, h, chT(ch, t)); bug(tvC, w, h, ch); }
+  }
+  if (S.mode === 'apps') { const [w, h] = sizeCv(aCv, S.scale, 2); drawTitle(aC, w, h, curTitle()[1], t); }
+  if (S.detail) {
+    const [w, h] = sizeCv(dCv, 1, 2), ti = S.detail.t;
+    if (S.play) {
+      const el = ((S.play.paused || now) - S.play.start) / 1000;
+      if (el >= S.play.dur) { S.play = null; $('hero').classList.remove('playing'); drawTitle(dC, w, h, ti, t); }
+      else {
+        if (Math.floor(el / 4) % 4 === 3) quoteCard(dC, w, h, ti); else drawTitle(dC, w, h, ti, el + Math.floor(el / 4) * 7);
+        dC.fillStyle = '#000'; dC.fillRect(0, 0, w, h * .08); dC.fillRect(0, h * .92, w, h * .08);
+        $('pFill').style.width = (el / S.play.dur * 100).toFixed(2) + '%'; $('pClock').textContent = `${mmss(el)} / ${mmss(S.play.dur)}`;
+      }
+    } else drawTitle(dC, w, h, ti, t);
   }
   if (S.mode === 'peek') {
     const [w, h] = sizeCv(pCv, S.scale, 2);
